@@ -8,9 +8,8 @@ bcrypt = Bcrypt(app)
 
 
 @app.route('/')
-def hello_world():
-    user = User.query.filter(User.name == 'admin').first().name
-    return 'Hello ' + str(user) + '!'
+def home():
+    return 'Hello World !'
 
 
 @app.route('/register')

@@ -1,0 +1,28 @@
+/*
+ * START BOOTSTRAP WIRE-FRAMING
+ */
+.container {
+    background: lightblue;
+}
+
+.featuredArea {
+    height: 200px;
+    background: lightcoral;
+}
+
+.categoryBox {
+    height: 200px;
+    background-color: grey;
+}
+
+.categoryContainer {
+    background-color: lightseagreen;
+}
+
+.footerArea {
+    height: 150px;
+    background-color: lightpink;
+}
+/*
+ * END BOOTSTRAP WIRE-FRAMING
+ */

@@ -1,18 +1,30 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Table, Column, ForeignKey, Integer, String, Text, Boolean
+from sqlalchemy.orm import relationship
+
 from database import Base
+
+charities_categories = Table('charities_categories', Base.metadata,
+                             Column('charity_id', Integer, ForeignKey('charities.id')),
+                             Column('category_id', Integer, ForeignKey('categories.id'))
+                             )
+
+charities_tags = Table('charities_tags', Base.metadata,
+                       Column('charity_id', Integer, ForeignKey('charities.id')),
+                       Column('tag_id', Integer, ForeignKey('tags.id'))
+                       )
 
 
 class Charities(Base):
     __tablename__ = 'charities'
     id = Column(Integer, primary_key=True)
     name = Column(String(300))
-    description = Column()  # Todo: Find out text type
+    description = Column(Text)
     website = Column(String(300))  # Todo: probably not long enough
     donate_link = Column(String(300))  # Todo: probably not long enough
-
-    # Todo: to-many -> Categories
-    # Todo: to-many -> Records
-    # Todo: to-many -> Tags
+    categories = relationship("Categories", secondary=charities_categories)
+    tags = relationship("Tags", secondary=charities_tags)
+    records = relationship("Records")
+    achievements = relationship("Achievements")
 
     def __repr__(self):
         return '<Charities %r>' % self.name
@@ -47,13 +59,17 @@ class Tags(Base):
 
 
 class Records(Base):
+    # Todo: figure out fields
     __tablename__ = 'records'
     id = Column(Integer, primary_key=True)
+    charity_id = Column(Integer, ForeignKey('charities.id'))
 
 
 class Achievements(Base):
-    __tablename__ = 'achivements'
+    # Todo: figure out fields
+    __tablename__ = 'achievements'
     id = Column(Integer, primary_key=True)
+    charity_id = Column(Integer, ForeignKey('charities.id'))
 
 
 class User(Base):
@@ -64,7 +80,8 @@ class User(Base):
     email = Column(String(120), unique=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
-    role = Column(Integer())  # Todo: Map to single role
+    role_id = Column(Integer, ForeignKey('users_roles.id'))
+    role = relationship("UserRoles")
 
     def __init__(self, username, pw_hash=None, email=None, first_name=None, last_name=None, role=None):
         self.username = username
@@ -81,7 +98,6 @@ class User(Base):
 class UserRoles(Base):
     __tablename__ = 'users_roles'
     id = Column(Integer, primary_key=True)
-    role_id = Column(Integer, unique=True)
     name = Column(String(30))
 
     def __init__(self, role_id, name):
@@ -93,8 +109,9 @@ class RegisterTokens(Base):
     __tablename__ = 'users_tokens'
     id = Column(Integer, primary_key=True)
     token = Column(String(150), unique=True)
-    role_id = Column(Integer())  # Todo: map to single
-    active = Column()  # Find out boolean type
+    role_id = Column(Integer, ForeignKey('users_roles.id'))
+    role = relationship("UserRoles")
+    active = Column(Boolean)
 
     def __init__(self, token, role):
         self.token = token  # Todo: auto generate

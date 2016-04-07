@@ -1,0 +1,5 @@
+2016-04-06
+
+I've realised that just getting IRS 990s while okay is not perfect as most organisations operate in multiple countries so
+not all their income & spending is reflected in just the IRS 990. So now I'm going to proceed with initially using the 990's but
+will have to get global data alot sooner than anticipated.

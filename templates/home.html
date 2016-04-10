@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 
 {% block body %}
+
     <div class="row">
         <div class="col-md-12 featuredArea">
-            FEATURED AREA
         </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1 categoryContainer">
             <div class="row">
-                <div class="col-md-4 categoryBox">CAT 1</div>
-                <div class="col-md-4 categoryBox">CAT 2</div>
-                <div class="col-md-4 categoryBox">CAT 3</div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 categoryBox">CAT 4</div>
-                <div class="col-md-4 categoryBox">CAT 5</div>
-                <div class="col-md-4 categoryBox">CAT 6</div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 categoryBox">CAT 7</div>
-                <div class="col-md-4 categoryBox">CAT 8</div>
-                <div class="col-md-4 categoryBox">CAT 9</div>
+                {% for category in data.categories %}
+                    <div class="col-md-4 categoryBox">
+                        <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoryLink">
+                            <div class="row">
+                                <div class="col-md-12 categoryIcon"><i class="fa {{ category.icon_class }}"></i></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 categoryName">{{ category.name }}</div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

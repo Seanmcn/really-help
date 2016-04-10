@@ -25,12 +25,24 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>ReallyHelp.org</h1>
+                    <a href="{{ request.url_root }}" class="logoLink"><h1>ReallyHelp.org</h1></a>
                 </div>
             </div>
             {% block body %}{% endblock %}
             <div class="row">
-                <div class="col-md-12 footerArea">FOOTER</div>
+                <div class="col-md-12 footerArea">
+                    <p class="footerText">
+                        ReallyHelp.org uses publicly accessible data to try and make charities more transparent.
+                    </p>
+                    <p class="footerText">
+                        Our way of processing the data isn't perfect and should be taken with a grain of salt, you can
+                        read about assumptions we make here.
+                    </p>
+                    <p class="footerText">
+                        ReallyHelp.org is an Open Source and non-commercial product.
+                        If you'd like to help us out please check our Github or see our donation page.
+                    </p>
+                </div>
             </div>
         </div>
     </div>

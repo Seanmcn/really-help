@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <input type="text" class="searchBox" id="search" placeholder="Search for a charity.."/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            {% if data.categories %}
+                <h3>Categories</h3>
+                <ul>
+                    {% for category in data.categories %}
+                        <li>
+                            {% if category.slug == data.slug %}
+                                <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink active">{{ category.name }}</a>
+                            {% else %}
+                                <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink">{{ category.name }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-9 resultArea">
+            {% if data.charities %}
+                {% for charity in data.charities %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6"><h3 class="resultTitle">{{ charity.name }}</h3></div>
+                                <div class="col-md-6">
+                                    {% for x in range(charity.rating) %}
+                                        <i class="fa fa-star ratingStar"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"><p>{{ charity.short_description }}</p></div>
+                            </div>
+                            <hr/>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock body %}

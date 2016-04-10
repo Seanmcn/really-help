@@ -4,27 +4,50 @@ from database import db_session
 from models import *
 
 app = Flask(__name__)
+app.config['SERVER_NAME'] = '127.0.0.1:5000'
 bcrypt = Bcrypt(app)
 
 
 @app.route('/')
 def home():
+    data = dict()
+    data['categories'] = db_session.query(Categories).order_by(Categories.name).all()
+    return render_template('home.html', data=data)
+
+
+@app.route('/category/<slug>')
+def category(slug):
+    data = dict()
+    data['slug'] = slug
+
     # Get Categories
-    return render_template('home.html')
+    data['categories'] = db_session.query(Categories).order_by(Categories.name).all()
 
+    data['charities'] = []
 
-@app.route('/category/<category>')
-def category(category):
+    a_charity = dict()
+    a_charity['id'] = 'one_drop'
+    a_charity['name'] = 'One Drop'
+    a_charity['short_description'] = 'One drop does thing with water for people who need it! They\'re great'
+    a_charity['rating'] = 5
+    data['charities'].append(a_charity)
+
+    a_charity = dict()
+    a_charity['id'] = 'bad_charity'
+    a_charity['name'] = 'Bad Charity'
+    a_charity['short_description'] = 'This charity doen\'t spend a lot of their money on their charity'
+    a_charity['rating'] = 2
+    data['charities'].append(a_charity)
     # Get Charities
-    data = []
-    return render_template('category.html', dara=data)
+
+    return render_template('category.html', data=data)
 
 
 @app.route('/charity/<int:id>')
 def charity(id):
     # Get Single Charity
     data = []
-    return render_template('charity.html', dara=data)
+    return render_template('charity.html', data=data)
 
 
 @app.route('/register')

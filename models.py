@@ -35,6 +35,7 @@ class Categories(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
     slug = Column(String(30), unique=True)
+    icon_class = Column(String(30))
 
     def __init__(self, slug, name=None):
         self.slug = slug

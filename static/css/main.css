@@ -63,6 +63,7 @@ a:hover {
 .searchBox {
     width: 100%;
     padding: .5em;
+    border: 1px solid lightgrey;
 }
 
 .searchLabel {
@@ -98,9 +99,11 @@ a:hover {
 a.categoryLink {
     color: #5E565A;
 }
+
 body {
     /*background-color: #242423;*/
 }
+
 .categoryIcon {
     font-size: 8.3em;
     width: 100%;

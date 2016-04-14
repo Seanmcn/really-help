@@ -15,6 +15,7 @@ def home():
     return render_template('home.html', data=data)
 
 
+# Todo: Thinking of it this is pointless, category should just link to search page with facet applied.
 @app.route('/category/<slug>')
 def category(slug):
     data = dict()
@@ -40,6 +41,12 @@ def category(slug):
     data['charities'].append(a_charity)
     # Get Charities
 
+    return render_template('category.html', data=data)
+
+
+@app.route('/search')
+def search():
+    data = dict()
     return render_template('category.html', data=data)
 
 

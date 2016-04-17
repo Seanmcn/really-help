@@ -1,11 +1,33 @@
-from flask import Flask, render_template
-from flask.ext.bcrypt import Bcrypt
+from flask import Flask, render_template, redirect, url_for
 from database import db_session
+from flask.ext.bcrypt import Bcrypt
 from models import *
+from forms import LoginForm
+from flask_wtf.csrf import CsrfProtect
 
+import flask.ext.login as flask_login
+
+# APP CONFIG
 app = Flask(__name__)
 app.config['SERVER_NAME'] = '127.0.0.1:5000'
+app.secret_key = 'SomeSECR3TSt5ing'  # Todo Sean: Update before push to PROD.
+
+csrf = CsrfProtect(app)
+# csrf.init_app(app)
+
+# LOGIN CONFIG
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 bcrypt = Bcrypt(app)
+
+
+@login_manager.user_loader
+def user_loader(user_id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+    """
+    return User.query.get(user_id)
 
 
 @app.route('/')
@@ -59,21 +81,46 @@ def charity(id):
 
 @app.route('/register')
 def register():
-    # pw_hash = bcrypt.generate_password_hash(password)
     return render_template('user/register.html')
 
 
-# Todo: Post Register?
-
-
-@app.route('/login')
+@app.route('/login', methods=("GET", "POST"))
 def login():
-    # bcrypt.check_password_hash(pw_hash, 'hunter2')  # returns True
-    return render_template('user/login.html')
+    """For GET requests, display the login form. For POSTS, login the current user
+       by processing the form."""
+    form = LoginForm()
+    print('Im the form')
+
+    if form.validate_on_submit():
+        print('here!')
+        user = User.query.get(form.email.data)
+        if user:
+            print('is user')
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                print('authenticated')
+                user.authenticated = True
+                db_session.add(user)
+                db_session.commit()
+                flask_login.login_user(user, remember=True)
+                return redirect(url_for("admin"))
+    print(form.errors)
+    print('else hit')
+    return render_template('user/login.html', form=form)
 
 
-# Todo: Post login?
+@flask_login.login_required
+@app.route('/logout', methods=["GET"])
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    db_session.add(user)
+    db_session.commit()
+    flask_login.logout_user()
+    return render_template("logout.html")
 
+
+@flask_login.login_required
 @app.route('/admin')
 def admin():
     # Probably setting data?

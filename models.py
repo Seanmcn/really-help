@@ -73,49 +73,54 @@ class Achievements(Base):
     charity_id = Column(Integer, ForeignKey('charities.id'))
 
 
+#
+# class User(Base):
+#     __tablename__ = 'users'
+#     id = Column(Integer, primary_key=True)
+#     username = Column(String(50), unique=True)
+#     pw_hash = Column(String(60))  # Todo: This only being 60 seems wrong, test.
+#     email = Column(String(120), unique=True)
+#     first_name = Column(String(50))
+#     last_name = Column(String(50))
+#     role_id = Column(Integer, ForeignKey('users_roles.id'))
+#     role = relationship("UserRoles")
+#
+#     def __init__(self, username, pw_hash=None, email=None, first_name=None, last_name=None, role=None):
+#         self.username = username
+#         self.pw_hash = pw_hash
+#         self.email = email
+#         self.first_name = first_name
+#         self.last_name = last_name
+#         self.role = role
+#
+#     def __repr__(self):
+#         return '<User %r>' % self.name
+
 class User(Base):
+    """An admin user capable of viewing reports.
+
+    :param str email: email address of user
+    :param str password: encrypted password for the user
+
+    """
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), unique=True)
-    pw_hash = Column(String(60))  # Todo: This only being 60 seems wrong, test.
-    email = Column(String(120), unique=True)
-    first_name = Column(String(50))
-    last_name = Column(String(50))
-    role_id = Column(Integer, ForeignKey('users_roles.id'))
-    role = relationship("UserRoles")
 
-    def __init__(self, username, pw_hash=None, email=None, first_name=None, last_name=None, role=None):
-        self.username = username
-        self.pw_hash = pw_hash
-        self.email = email
-        self.first_name = first_name
-        self.last_name = last_name
-        self.role = role
+    email = Column(String(120), primary_key=True)
+    password = Column(String(60))
+    authenticated = Column(Boolean, default=False)
 
-    def __repr__(self):
-        return '<User %r>' % self.name
+    def is_active(self):
+        """True, as all users are active."""
+        return True
 
+    def get_id(self):
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return self.email
 
-class UserRoles(Base):
-    __tablename__ = 'users_roles'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(30))
+    def is_authenticated(self):
+        """Return True if the user is authenticated."""
+        return self.authenticated
 
-    def __init__(self, role_id, name):
-        self.role_id = role_id
-        self.name = name
-
-
-class RegisterTokens(Base):
-    __tablename__ = 'users_tokens'
-    id = Column(Integer, primary_key=True)
-    token = Column(String(150), unique=True)
-    role_id = Column(Integer, ForeignKey('users_roles.id'))
-    role = relationship("UserRoles")
-    active = Column(Boolean)
-
-    def __init__(self, token, role):
-        self.token = token  # Todo: auto generate
-        self.role = role
-
-        # Todo: Active mode.
+    def is_anonymous(self):
+        """False, as anonymous users aren't supported."""
+        return False

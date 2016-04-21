@@ -11,7 +11,7 @@
             <div class="row">
                 {% for category in data.categories %}
                     <div class="col-md-4 categoryBox">
-                        <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoryLink">
+                        <a href="{{ request.url_root }}search?category={{ category.slug }}" class="categoryLink">
                             <div class="row">
                                 <div class="col-md-12 categoryIcon"><i class="fa {{ category.icon_class }}"></i></div>
                             </div>

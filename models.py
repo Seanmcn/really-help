@@ -21,6 +21,7 @@ class Charities(Base):
     description = Column(Text)
     website = Column(String(300))  # Todo: probably not long enough
     donate_link = Column(String(300))  # Todo: probably not long enough
+    rating = Column(Integer)
     categories = relationship("Categories", secondary=charities_categories)
     tags = relationship("Tags", secondary=charities_tags)
     records = relationship("Records")

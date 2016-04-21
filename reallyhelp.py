@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from database import db_session
 from flask.ext.bcrypt import Bcrypt
 from models import *
@@ -37,39 +37,29 @@ def home():
     return render_template('home.html', data=data)
 
 
-# Todo: Thinking of it this is pointless, category should just link to search page with facet applied.
-@app.route('/category/<slug>')
-def category(slug):
-    data = dict()
-    data['slug'] = slug
-
-    # Get Categories
-    data['categories'] = db_session.query(Categories).order_by(Categories.name).all()
-
-    data['charities'] = []
-
-    a_charity = dict()
-    a_charity['id'] = 'one_drop'
-    a_charity['name'] = 'One Drop'
-    a_charity['short_description'] = 'One drop does thing with water for people who need it! They\'re great'
-    a_charity['rating'] = 5
-    data['charities'].append(a_charity)
-
-    a_charity = dict()
-    a_charity['id'] = 'bad_charity'
-    a_charity['name'] = 'Bad Charity'
-    a_charity['short_description'] = 'This charity doen\'t spend a lot of their money on their charity'
-    a_charity['rating'] = 2
-    data['charities'].append(a_charity)
-    # Get Charities
-
-    return render_template('category.html', data=data)
-
-
 @app.route('/search')
 def search():
+    category = request.args.get("category")
+    search = request.args.get("search")
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+
+    if not limit:
+        limit = 25
+
+    if not offset:
+        offset = 0
+
     data = dict()
-    return render_template('category.html', data=data)
+    # Get Categories
+    data['categories'] = db_session.query(Categories).order_by(Categories.name).all()
+    data['category'] = category
+    # Search charities
+    # If no search grab all charities
+    # Todo: Download the sqlacademy documentation so i have it offline.
+    # Todo: limit and paginate
+    data['charities'] = db_session.query(Charities).order_by(Charities.rating).all()
+    return render_template('search.html', data=data)
 
 
 @app.route('/charity/<int:id>')
@@ -90,9 +80,11 @@ def login():
        by processing the form."""
     form = LoginForm()
     print('Im the form')
+    print(form)
 
     if form.validate_on_submit():
         print('here!')
+        print(form.email.data)
         user = User.query.get(form.email.data)
         if user:
             print('is user')

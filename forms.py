@@ -9,14 +9,14 @@ class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
-    # def __init__(self, *args, **kwargs):
-    #     Form.__init__(self, *args, **kwargs)
-    #     self.user = None
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        self.user = None
 
-    # def validate(self):
-    #     rv = Form.validate(self)
-    #     if not rv:
-    #         return False
+    def validate(self):
+        rv = Form.validate(self)
+        if not rv:
+            return False
     #
     #     user = User.query.filter_by(
     #         username=self.username.data).first()
@@ -28,5 +28,5 @@ class LoginForm(Form):
     #         self.password.errors.append('Invalid password')
     #         return False
     #
-    #     self.user = user
-    #     return True
+        self.user = user
+        return True

@@ -13,7 +13,7 @@
                 <ul>
                     {% for category in data.categories %}
                         <li>
-                            {% if category.slug == data.slug %}
+                            {% if category.slug == data.category %}
                                 <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink active">{{ category.name }}</a>
                             {% else %}
                                 <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink">{{ category.name }}</a>
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12"><p>{{ charity.short_description }}</p></div>
+                                <div class="col-md-12"><p>{{ charity.description }}</p></div>
                             </div>
                             <hr/>
                         </div>

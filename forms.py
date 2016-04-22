@@ -28,5 +28,5 @@ class LoginForm(Form):
     #         self.password.errors.append('Invalid password')
     #         return False
     #
-        self.user = user
+        # self.user = user
         return True

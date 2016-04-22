@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from database import db_session
+from sqlalchemy import or_
 from flask.ext.bcrypt import Bcrypt
 from models import *
 from forms import LoginForm
@@ -40,9 +41,12 @@ def home():
 @app.route('/search')
 def search():
     category = request.args.get("category")
-    search = request.args.get("search")
+    query = request.args.get("query")
     limit = request.args.get("limit")
     offset = request.args.get("offset")
+
+    if query == '*':
+        query = ''
 
     if not limit:
         limit = 25
@@ -56,9 +60,22 @@ def search():
     data['category'] = category
     # Search charities
     # If no search grab all charities
-    # Todo: Download the sqlacademy documentation so i have it offline.
     # Todo: limit and paginate
-    data['charities'] = db_session.query(Charities).order_by(Charities.rating).all()
+    # Todo: Stem the query?? Searching for phrases that are broken won't currently work.
+    # Todo: Should we have used elastic search?
+    if query and category:
+        # results = db_session.query(Charities).filter(or_(Charities.name.like('%'+query+'%')))
+        results = []
+    elif query:
+        results = db_session.query(Charities).filter(
+            or_(Charities.name.like('%' + query + '%'), Charities.description.like('%' + query + '%')))
+    elif category:
+        # results = db_session.query(Charities).filter(or_(Charities.name.like('%' + query + '%')))
+        results = []
+    else:
+        results = db_session.query(Charities).order_by(Charities.rating).all()
+
+    data['charities'] = results
     return render_template('search.html', data=data)
 
 

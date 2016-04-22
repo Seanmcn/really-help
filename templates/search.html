@@ -3,7 +3,9 @@
 {% block body %}
     <div class="row">
         <div class="col-md-offset-1 col-md-10">
-            <input type="text" class="searchBox" id="search" placeholder="Search for a charity.."/>
+            <form method="get">
+                <input type="text" class="searchBox" id="search" name="query" placeholder="Search for a charity.."/>
+            </form>
         </div>
     </div>
     <div class="row">
@@ -14,9 +16,11 @@
                     {% for category in data.categories %}
                         <li>
                             {% if category.slug == data.category %}
-                                <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink active">{{ category.name }}</a>
+                                <a href="{{ request.url_root }}search?category={{ category.slug }}"
+                                   class="categoriesLink active">{{ category.name }}</a>
                             {% else %}
-                                <a href="{{ request.url_root }}category/{{ category.slug }}" class="categoriesLink">{{ category.name }}</a>
+                                <a href="{{ request.url_root }}search?category={{ category.slug }}"
+                                   class="categoriesLink">{{ category.name }}</a>
                             {% endif %}
                         </li>
                     {% endfor %}
